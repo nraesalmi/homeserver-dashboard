@@ -114,9 +114,9 @@ export default function App() {
       {/* Main Content */}
       <div className="relative z-10 px-4 md:px-8 py-6 space-y-6">
         {/* Greeting and Resource Gauges */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-white">{greeting.current}</h1>
-          <div className="flex items-center gap-2 md:gap-4 overflow-x-auto pb-1">
+        <div className="flex flex-col md:flex-row md:items-center gap-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-white text-center md:text-left">{greeting.current}</h1>
+          <div className="flex items-center justify-center gap-2 md:gap-4 w-full md:w-auto">
             {stats ? (
               <>
                 <ResourceGauge label="CPU" value={stats.cpu} max={100} unit="%" />
