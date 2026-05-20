@@ -47,7 +47,7 @@ export default function App() {
   const lockedServices = services.filter(s => s.locked)
 
   return (
-    <div className="size-full bg-neutral-800 relative overflow-auto">
+    <div className="size-full bg-neutral-800 relative flex flex-col">
       {/* Gradient overlay */}
       <div className="fixed inset-0 bg-gradient-to-b from-yellow-400/40 via-neutral-700/50 to-neutral-800 h-1/2 pointer-events-none" />
 
@@ -111,8 +111,8 @@ export default function App() {
         </div>
       )}
 
-      {/* Main Content */}
-      <div className="relative z-10 px-4 md:px-8 py-6 space-y-6 flex flex-col min-h-full">
+      {/* Scrollable Content */}
+      <div className="relative z-10 flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-6">
         {/* Greeting and Resource Gauges */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h1 className="text-2xl md:text-3xl font-bold text-white">{greeting.current}</h1>
@@ -181,22 +181,22 @@ export default function App() {
             </div>
           </div>
         )}
+      </div>
 
-        {/* Footer */}
-        <div className="mt-auto pt-8 pb-4 text-center">
-          <p className="text-xs text-neutral-500 inline-flex items-center justify-center gap-1.5 flex-wrap">
-            <span>© 2026 Niklas Raesalmi · Apache License 2.0 ·</span>
-            <a
-              href="https://github.com/nraesalmi/homeserver-dashboard/tree/main"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-neutral-500 hover:text-neutral-300 transition-colors"
-            >
-              <Github className="w-3.5 h-3.5" />
-              <span>Source Code</span>
-            </a>
-          </p>
-        </div>
+      {/* Footer */}
+      <div className="relative z-10 px-4 md:px-8 py-4 text-center border-t border-neutral-700/30 bg-neutral-800">
+        <p className="text-xs text-neutral-500 inline-flex items-center justify-center gap-1.5 flex-wrap">
+          <span>© 2026 Niklas Raesalmi · Apache License 2.0 ·</span>
+          <a
+            href="https://github.com/nraesalmi/homeserver-dashboard/tree/main"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-neutral-500 hover:text-neutral-300 transition-colors"
+          >
+            <Github className="w-3.5 h-3.5" />
+            <span>Source Code</span>
+          </a>
+        </p>
       </div>
     </div>
   )
