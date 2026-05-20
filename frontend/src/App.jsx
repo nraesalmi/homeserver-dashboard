@@ -184,9 +184,10 @@ export default function App() {
       </div>
 
       {/* Footer */}
-      <div className="relative z-10 px-4 md:px-8 py-4 text-center border-t border-neutral-700/30 bg-neutral-800">
+      <div className="relative z-10 px-4 md:px-8 py-2 md:py-3 text-center border-t border-neutral-700/30 bg-neutral-800">
         <p className="text-xs text-neutral-500 inline-flex items-center justify-center gap-1.5 flex-wrap">
-          <span>© 2026 Niklas Raesalmi · Apache License 2.0 ·</span>
+          <span>© 2026 Niklas Raesalmi · Apache License 2.0</span>
+          <span className="hidden md:inline">·</span>
           <a
             href="https://github.com/nraesalmi/homeserver-dashboard/tree/main"
             target="_blank"
@@ -194,7 +195,7 @@ export default function App() {
             className="inline-flex items-center gap-1 text-neutral-500 hover:text-neutral-300 transition-colors"
           >
             <Github className="w-3.5 h-3.5" />
-            <span>Source Code</span>
+            <span className="hidden md:inline">Source Code</span>
           </a>
         </p>
       </div>
