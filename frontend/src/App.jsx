@@ -116,7 +116,7 @@ export default function App() {
         {/* Greeting and Resource Gauges */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h1 className="text-2xl md:text-3xl font-bold text-white">{greeting.current}</h1>
-          <div className="flex items-center gap-3 overflow-x-auto pb-1">
+          <div className="flex items-center gap-2 md:gap-4 overflow-x-auto pb-1">
             {stats ? (
               <>
                 <ResourceGauge label="CPU" value={stats.cpu} max={100} unit="%" />
