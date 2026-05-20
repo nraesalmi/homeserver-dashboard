@@ -112,7 +112,7 @@ export default function App() {
       )}
 
       {/* Main Content */}
-      <div className="relative z-10 px-4 md:px-8 py-6 space-y-6">
+      <div className="relative z-10 px-4 md:px-8 py-6 space-y-6 flex flex-col min-h-full">
         {/* Greeting and Resource Gauges */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h1 className="text-2xl md:text-3xl font-bold text-white">{greeting.current}</h1>
@@ -183,9 +183,9 @@ export default function App() {
         )}
 
         {/* Footer */}
-        <div className="pt-8 pb-4 text-center">
-          <p className="text-xs text-neutral-500">
-            © 2026 Niklas Raesalmi · Apache License 2.0 ·{" "}
+        <div className="mt-auto pt-8 pb-4 text-center">
+          <p className="text-xs text-neutral-500 inline-flex items-center justify-center gap-1.5 flex-wrap">
+            <span>© 2026 Niklas Raesalmi · Apache License 2.0 ·</span>
             <a
               href="https://github.com/nraesalmi/homeserver-dashboard/tree/main"
               target="_blank"
@@ -193,7 +193,7 @@ export default function App() {
               className="inline-flex items-center gap-1 text-neutral-500 hover:text-neutral-300 transition-colors"
             >
               <Github className="w-3.5 h-3.5" />
-              Source Code
+              <span>Source Code</span>
             </a>
           </p>
         </div>
