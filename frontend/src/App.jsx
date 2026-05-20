@@ -55,7 +55,7 @@ export default function App() {
       <div className="sticky top-0 z-10 flex items-center justify-between px-4 md:px-8 py-3 bg-neutral-900/60 backdrop-blur-sm border-b border-neutral-700/30">
         <div className="flex items-center gap-3">
           <img src="/logo.png" alt="nfrastructure" className="h-8 w-auto" />
-          <div className="text-xl font-bold text-white hidden md:block">nfrastructure.xyz</div>
+          <div className="text-lg md:text-xl font-bold text-white">nfrastructure.xyz</div>
         </div>
 
         {/* Desktop: inline socials + docs */}
@@ -87,9 +87,18 @@ export default function App() {
       {/* Mobile dropdown menu */}
       {showMenu && (
         <div className="absolute top-14 right-4 z-20 bg-neutral-900/90 backdrop-blur-sm border border-neutral-700/50 rounded-lg p-3 flex flex-col gap-2 shadow-xl md:hidden">
-          <SocialButton icon={Linkedin} href="https://www.linkedin.com/in/niklasraesalmi/" label="LinkedIn" />
-          <SocialButton icon={Mail} href="mailto:niklas.raesalmi@gmail.com" label="Email" />
-          <SocialButton icon={Github} href="https://github.com/nraesalmi" label="GitHub" />
+          <a href="https://www.linkedin.com/in/niklasraesalmi/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-3 py-2 bg-neutral-700/60 hover:bg-neutral-600/80 text-neutral-300 hover:text-white rounded-lg transition-colors backdrop-blur-sm border border-neutral-600/50">
+            <Linkedin className="w-5 h-5" />
+            <span className="text-sm">LinkedIn</span>
+          </a>
+          <a href="mailto:niklas.raesalmi@gmail.com" className="flex items-center gap-3 px-3 py-2 bg-neutral-700/60 hover:bg-neutral-600/80 text-neutral-300 hover:text-white rounded-lg transition-colors backdrop-blur-sm border border-neutral-600/50">
+            <Mail className="w-5 h-5" />
+            <span className="text-sm">Email</span>
+          </a>
+          <a href="https://github.com/nraesalmi" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-3 py-2 bg-neutral-700/60 hover:bg-neutral-600/80 text-neutral-300 hover:text-white rounded-lg transition-colors backdrop-blur-sm border border-neutral-600/50">
+            <Github className="w-5 h-5" />
+            <span className="text-sm">GitHub</span>
+          </a>
           <a
             href="https://docs.nfrastructure.xyz/share/80032tqogr/p/public-docs-KSibYbUW91"
             target="_blank"
@@ -106,8 +115,8 @@ export default function App() {
       <div className="relative z-10 px-4 md:px-8 py-6 space-y-6">
         {/* Greeting and Resource Gauges */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h1 className="text-3xl font-bold text-white">{greeting.current}</h1>
-          <div className="flex items-center gap-4 flex-wrap">
+          <h1 className="text-2xl md:text-3xl font-bold text-white">{greeting.current}</h1>
+          <div className="flex items-center gap-3 overflow-x-auto pb-1">
             {stats ? (
               <>
                 <ResourceGauge label="CPU" value={stats.cpu} max={100} unit="%" />
@@ -124,7 +133,7 @@ export default function App() {
         {unlockedServices.length > 0 && (
           <div className="space-y-3">
             <h2 className="text-xl font-semibold text-white">Services</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {unlockedServices.map(s => (
                 <ServiceCard key={s.name} icon={s.icon} name={s.name} url={s.url} status="online" />
               ))}
@@ -136,7 +145,7 @@ export default function App() {
         {lockedServices.length > 0 && (
           <div className="space-y-3">
             <h2 className="text-xl font-semibold text-white">Protected Services</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {lockedServices.map(s => (
                 <ServiceCard key={s.name} icon={s.icon} name={s.name} url={s.url} status="online" />
               ))}
