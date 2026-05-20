@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react"
-import { FileText, Github, Linkedin, Mail } from "lucide-react"
+import { FileText, Github, Linkedin, Mail, MoreHorizontal } from "lucide-react"
 import { ResourceGauge } from "./components/ResourceGauge"
 import { ServiceCard } from "./components/ServiceCard"
 import { SocialButton } from "./components/SocialButton"
@@ -22,6 +22,7 @@ const greetings = [
 export default function App() {
   const [stats, setStats] = useState(null)
   const [services, setServices] = useState([])
+  const [showMenu, setShowMenu] = useState(false)
   const greeting = useRef(greetings[Math.floor(Math.random() * greetings.length)])
 
   useEffect(() => {
@@ -51,13 +52,14 @@ export default function App() {
       <div className="fixed inset-0 bg-gradient-to-b from-yellow-400/40 via-neutral-700/50 to-neutral-800 h-1/2 pointer-events-none" />
 
       {/* Top bar */}
-      <div className="sticky top-0 z-10 flex items-center justify-between px-8 py-3 bg-neutral-900/60 backdrop-blur-sm border-b border-neutral-700/30">
+      <div className="sticky top-0 z-10 flex items-center justify-between px-4 md:px-8 py-3 bg-neutral-900/60 backdrop-blur-sm border-b border-neutral-700/30">
         <div className="flex items-center gap-3">
           <img src="/logo.png" alt="nfrastructure" className="h-8 w-auto" />
-          <div className="text-xl font-bold text-white">nfrastructure.xyz</div>
+          <div className="text-xl font-bold text-white hidden md:block">nfrastructure.xyz</div>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* Desktop: inline socials + docs */}
+        <div className="hidden md:flex items-center gap-2">
           <SocialButton icon={Linkedin} href="https://www.linkedin.com/in/niklasraesalmi/" label="LinkedIn" />
           <SocialButton icon={Mail} href="mailto:niklas.raesalmi@gmail.com" label="Email" />
           <SocialButton icon={Github} href="https://github.com/nraesalmi" label="GitHub" />
@@ -71,14 +73,41 @@ export default function App() {
             Documentation
           </a>
         </div>
+
+        {/* Mobile: menu button */}
+        <button
+          onClick={() => setShowMenu(!showMenu)}
+          className="md:hidden p-2 bg-neutral-700/60 hover:bg-neutral-600/80 text-neutral-300 hover:text-white rounded-lg transition-colors backdrop-blur-sm border border-neutral-600/50"
+          aria-label="Menu"
+        >
+          <MoreHorizontal className="w-5 h-5" />
+        </button>
       </div>
 
+      {/* Mobile dropdown menu */}
+      {showMenu && (
+        <div className="absolute top-14 right-4 z-20 bg-neutral-900/90 backdrop-blur-sm border border-neutral-700/50 rounded-lg p-3 flex flex-col gap-2 shadow-xl md:hidden">
+          <SocialButton icon={Linkedin} href="https://www.linkedin.com/in/niklasraesalmi/" label="LinkedIn" />
+          <SocialButton icon={Mail} href="mailto:niklas.raesalmi@gmail.com" label="Email" />
+          <SocialButton icon={Github} href="https://github.com/nraesalmi" label="GitHub" />
+          <a
+            href="https://docs.nfrastructure.xyz/share/80032tqogr/p/public-docs-KSibYbUW91"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 bg-neutral-700/80 hover:bg-neutral-600/80 text-white rounded-lg transition-colors backdrop-blur-sm border border-neutral-600/50"
+          >
+            <FileText className="w-5 h-5" />
+            Docs
+          </a>
+        </div>
+      )}
+
       {/* Main Content */}
-      <div className="relative z-10 px-8 py-6 space-y-6">
+      <div className="relative z-10 px-4 md:px-8 py-6 space-y-6">
         {/* Greeting and Resource Gauges */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h1 className="text-3xl font-bold text-white">{greeting.current}</h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap">
             {stats ? (
               <>
                 <ResourceGauge label="CPU" value={stats.cpu} max={100} unit="%" />
