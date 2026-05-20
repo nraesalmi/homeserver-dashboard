@@ -181,6 +181,22 @@ export default function App() {
             </div>
           </div>
         )}
+
+        {/* Footer */}
+        <div className="pt-8 pb-4 text-center">
+          <p className="text-xs text-neutral-500">
+            © 2026 Niklas Raesalmi · Apache License 2.0 ·{" "}
+            <a
+              href="https://github.com/nraesalmi/homeserver-dashboard/tree/main"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-neutral-500 hover:text-neutral-300 transition-colors"
+            >
+              <Github className="w-3.5 h-3.5" />
+              Source Code
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   )
