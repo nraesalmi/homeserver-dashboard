@@ -52,7 +52,10 @@ export default function App() {
 
       {/* Top bar */}
       <div className="sticky top-0 z-10 flex items-center justify-between px-8 py-3 bg-neutral-900/60 backdrop-blur-sm border-b border-neutral-700/30">
-        <div className="text-xl font-bold text-white">nfrastructure.xyz</div>
+        <div className="flex items-center gap-3">
+          <img src="/logo.png" alt="nfrastructure" className="h-8 w-auto" />
+          <div className="text-xl font-bold text-white">nfrastructure.xyz</div>
+        </div>
 
         <div className="flex items-center gap-2">
           <SocialButton icon={Linkedin} href="https://www.linkedin.com/in/niklasraesalmi/" label="LinkedIn" />
