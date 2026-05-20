@@ -1,10 +1,11 @@
-export function ServiceCard({ icon, name, status = "online", url }) {
+export function ServiceCard({ icon, name, status = "online", url, description }) {
   const content = (
     <>
       <div className="flex items-center gap-2 md:gap-3">
         <div className="p-1.5 md:p-2 bg-neutral-800 rounded-lg leading-none text-base md:text-lg">{icon}</div>
         <div className="flex-1 min-w-0">
-          <div className="text-xs md:text-sm font-medium text-white truncate">{name}</div>
+          <div className="text-xs md:text-sm font-semibold text-white truncate">{name}</div>
+          {description && <div className="hidden md:block text-xs text-neutral-400 truncate">{description}</div>}
         </div>
         <div className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full shrink-0 ${status === 'online' ? 'bg-green-500' : 'bg-red-500'}`} />
       </div>

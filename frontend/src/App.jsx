@@ -132,10 +132,22 @@ export default function App() {
         {/* Services */}
         {unlockedServices.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-xl font-semibold text-white">Services</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-white">Services</h2>
+              <div className="hidden md:flex items-center gap-4 text-xs text-neutral-400">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-green-500" />
+                  Healthy
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-red-500" />
+                  Offline
+                </span>
+              </div>
+            </div>
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {unlockedServices.map(s => (
-                <ServiceCard key={s.name} icon={s.icon} name={s.name} url={s.url} status="online" />
+                <ServiceCard key={s.name} icon={s.icon} name={s.name} url={s.url} status="online" description={s.description} />
               ))}
             </div>
           </div>
@@ -144,10 +156,27 @@ export default function App() {
         {/* Protected Services */}
         {lockedServices.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-xl font-semibold text-white">Protected Services</h2>
+            {unlockedServices.length === 0 && (
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-white">Protected Services</h2>
+                <div className="hidden md:flex items-center gap-4 text-xs text-neutral-400">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-green-500" />
+                    Healthy
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-red-500" />
+                    Offline
+                  </span>
+                </div>
+              </div>
+            )}
+            {unlockedServices.length > 0 && (
+              <h2 className="text-xl font-semibold text-white">Protected Services</h2>
+            )}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {lockedServices.map(s => (
-                <ServiceCard key={s.name} icon={s.icon} name={s.name} url={s.url} status="online" />
+                <ServiceCard key={s.name} icon={s.icon} name={s.name} url={s.url} status="online" description={s.description} />
               ))}
             </div>
           </div>
