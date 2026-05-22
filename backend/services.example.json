@@ -1,0 +1,9 @@
+[
+  {
+    "name": "Service Name",
+    "url": "https://example.com",
+    "icon": "🔧",
+    "description": "What it does",
+    "locked": true
+  }
+]

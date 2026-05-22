@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import json
+import os
 import psutil
+
+BASE_DIR = os.path.dirname(__file__)
+SERVICES_FILE = os.path.join(BASE_DIR, "services.json")
 
 app = FastAPI()
 
@@ -25,26 +30,7 @@ def get_stats():
 
 @app.get("/api/services")
 def get_services():
-    return [
-        {
-            "name": "Docmost",
-            "url": "https://docs.nfrastructure.xyz",
-            "icon": "📚",
-            "description": "Documentation Wiki",
-            "locked": True
-        },
-        {
-            "name": "Docmost",
-            "url": "https://docs.nfrastructure.xyz/share/0ak27sw280/p/public-docs-Uy0bBzDPcK",
-            "icon": "📚",
-            "description": "Public Docs",
-            "locked": False
-        },
-        {
-            "name": "Firefly III",
-            "url": "https://firefly.nfrastructure.xyz",
-            "icon": "💰",
-            "description": "Personal Finance",
-            "locked": True
-        }
-    ]
+    if os.path.exists(SERVICES_FILE):
+        with open(SERVICES_FILE, "r") as f:
+            return json.load(f)
+    return []
