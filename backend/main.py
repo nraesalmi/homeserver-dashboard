@@ -34,6 +34,13 @@ def get_services():
             "locked": True
         },
         {
+            "name": "Docmost",
+            "url": "https://docs.nfrastructure.xyz/share/0ak27sw280/p/public-docs-Uy0bBzDPcK",
+            "icon": "📚",
+            "description": "Public Docs",
+            "locked": False
+        },
+        {
             "name": "Firefly III",
             "url": "https://firefly.nfrastructure.xyz",
             "icon": "💰",
