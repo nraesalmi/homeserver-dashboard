@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Docmost",
+    "url": "https://docs.nfrastructure.xyz",
+    "icon": "📚",
+    "description": "Documentation Wiki",
+    "locked": true
+  },
+  {
+    "name": "Docmost",
+    "url": "https://docs.nfrastructure.xyz/share/0ak27sw280/p/public-docs-Uy0bBzDPcK",
+    "icon": "📚",
+    "description": "Public Docs",
+    "locked": false
+  },
+  {
+    "name": "Healthchecks",
+    "url": "https://health.nfrastructure.xyz",
+    "icon": "❤️",
+    "description": "Cron Job Monitoring",
+    "locked": false
+  },
+  {
+    "name": "Firefly III",
+    "url": "https://firefly.nfrastructure.xyz",
+    "icon": "💰",
+    "description": "Personal Finance",
+    "locked": true
+  }
+]
