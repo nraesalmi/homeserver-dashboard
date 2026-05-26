@@ -148,15 +148,15 @@ export default function ServerStats() {
         <Sparkline data={loadHistory} color="#a78bfa" label="Load Average" width={280} height={90} />
       </div>
 
-      <div className="hidden md:grid grid-cols-1 gap-4">
+      <div className="hidden md:grid grid-cols-2 gap-4">
         <Sparkline
           series={[
             { data: data.history?.map((h) => h.network_sent) ?? [], color: "#22c55e" },
             { data: data.history?.map((h) => h.network_recv) ?? [], color: "#38bdf8" },
           ]}
           label="Network (↑ sent / ↓ recv)"
-          width={580}
-          height={80}
+          width={280}
+          height={90}
         />
       </div>
 
