@@ -29,7 +29,7 @@
   },
   {
     "name": "Stirling PDF",
-    "url": "https://stirlingpdf.nfrastructure.xyz",
+    "url": "https://stirling-pdf.nfrastructure.xyz",
     "icon": "📄",
     "description": "PDF Tools",
     "locked": false
@@ -40,5 +40,12 @@
     "icon": "✏️",
     "description": "Whiteboard",
     "locked": false
+  },
+  {
+    "name": "Uptime Kuma",
+    "url": "https://uptime-kuma.nfrastructure.xyz",
+    "icon": "🔔",
+    "description": "Service Monitoring",
+    "locked": true
   }
 ]
