@@ -57,7 +57,8 @@ async def fetch_beszel_stats():
     try:
         token = await get_beszel_token()
         system_id = await get_system_id(token)
-    except Exception:
+    except Exception as e:
+        print(f"Auth/system error: {e}")
         return None
 
     params = {"sort": "-created", "perPage": 60}
@@ -78,34 +79,36 @@ async def fetch_beszel_stats():
                 return None
 
             latest = items[0]
-            fields = ["cpu", "memory", "disk", "networkSent", "networkRecv", "load1", "load5", "load15"]
-
-            def get_field(item, keys):
-                for k in keys:
-                    v = item.get(k)
-                    if v is not None:
-                        return v
-                return 0
+            s = latest.get("stats", {})
+            la = s.get("la", [0, 0, 0])
+            b = s.get("b", [0, 0])
 
             history = []
             for item in reversed(items):
-                cpu = get_field(item, ["cpu"])
-                load = get_field(item, ["load1", "load", "loadAvg"])
-                history.append({"time": item.get("created", ""), "cpu": cpu, "load": load})
+                item_stats = item.get("stats", {})
+                ila = item_stats.get("la", [0])
+                history.append({
+                    "time": item.get("created", ""),
+                    "cpu": item_stats.get("cpu", 0),
+                    "load": ila[0] if ila else 0,
+                })
 
             return {
-                "cpu": get_field(latest, ["cpu"]),
-                "memory": get_field(latest, ["memory"]),
-                "disk": get_field(latest, ["disk"]),
-                "network_sent": get_field(latest, ["networkSent", "network_sent"]),
-                "network_recv": get_field(latest, ["networkRecv", "network_recv"]),
-                "load": get_field(latest, ["load1", "load", "loadAvg"]),
-                "load5": get_field(latest, ["load5", "load5"]),
-                "load15": get_field(latest, ["load15", "load15"]),
+                "cpu": s.get("cpu", 0),
+                "memory": s.get("mp", 0),
+                "memory_used": s.get("mu", 0),
+                "disk": s.get("dp", 0),
+                "disk_used": s.get("du", 0),
+                "network_sent": b[0] if len(b) > 0 else 0,
+                "network_recv": b[1] if len(b) > 1 else 0,
+                "load": la[0] if len(la) > 0 else 0,
+                "load5": la[1] if len(la) > 1 else 0,
+                "load15": la[2] if len(la) > 2 else 0,
                 "history": history,
                 "last_updated": latest.get("created"),
             }
-    except Exception:
+    except Exception as e:
+        print(f"Stats fetch error: {e}")
         return None
 
 @app.get("/api/stats")
