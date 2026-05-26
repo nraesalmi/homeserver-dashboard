@@ -133,56 +133,54 @@ async def fetch_uptime_kuma_data():
     if _uptime_kuma_cache["data"] and now < _uptime_kuma_cache["expires_at"]:
         return _uptime_kuma_cache["data"]
 
-    monitors = {}
-
     try:
         async with httpx.AsyncClient(timeout=10) as client:
-            # 1. Get monitor list with names and active status
-            mr = await client.get(f"{UPTIME_KUMA_URL}/api/monitors")
-            if mr.status_code == 200:
-                monitor_list = mr.json()
-                for m in monitor_list:
-                    mid = str(m.get("id", ""))
-                    name = m.get("name", "").strip()
-                    if not name or not mid:
-                        continue
-                    monitors[mid] = {"name": name, "up": m.get("active", False), "uptime_24h": 100.0}
+            # Get ID -> name mapping from status page
+            sp = await client.get(f"{UPTIME_KUMA_URL}/api/status-page/local-services")
+            hb = await client.get(f"{UPTIME_KUMA_URL}/api/status-page/heartbeat/local-services")
 
-            # 2. Get 24h uptime from status page heartbeat endpoint
-            sr = await client.get(f"{UPTIME_KUMA_URL}/api/status-page/heartbeat/local-services")
-            if sr.status_code == 200:
-                sp = sr.json()
-                uptime_list = sp.get("uptimeList", {})
-                for mid, uptime_val in uptime_list.items():
-                    mid = str(mid)
-                    if mid not in monitors:
-                        continue
-                    try:
-                        monitors[mid]["uptime_24h"] = round(float(uptime_val), 1)
-                    except (ValueError, TypeError):
-                        pass
+            if sp.status_code != 200 or hb.status_code != 200:
+                return None
 
-                # 3. Derive current up/down from latest heartbeat
-                hb_list = sp.get("heartbeatList", {})
-                for mid, hbs in hb_list.items():
-                    mid = str(mid)
-                    if mid not in monitors or not hbs:
-                        continue
-                    latest = hbs[0]
-                    monitors[mid]["up"] = latest.get("status") == 1
+            sp_data = sp.json()
+            hb_data = hb.json()
+
+        # Build ID -> name map from publicGroupList
+        id_to_name = {}
+        for group in sp_data.get("publicGroupList", []):
+            for monitor in group.get("monitorList", []):
+                mid = str(monitor["id"])
+                name = monitor["name"].strip()
+                if monitor.get("type") != "group":
+                    id_to_name[mid] = name
+
+        heartbeat_list = hb_data.get("heartbeatList", {})
+        uptime_list = hb_data.get("uptimeList", {})
+        cutoff = now - 86400
+
+        result = {}
+        for mid, name in id_to_name.items():
+            heartbeats = heartbeat_list.get(mid, [])
+            uptime_raw = uptime_list.get(mid)
+
+            # Current status from latest heartbeat
+            up = heartbeats[0].get("status") == 1 if heartbeats else False
+
+            # 24h uptime from uptimeList (already calculated by Uptime Kuma)
+            if uptime_raw is not None:
+                uptime_24h = round(float(uptime_raw) * 100, 1)
+            else:
+                uptime_24h = 100.0
+
+            result[name] = {"up": up, "uptime_24h": uptime_24h}
+
+        _uptime_kuma_cache["data"] = result
+        _uptime_kuma_cache["expires_at"] = now + 30
+        return result
 
     except Exception as e:
         print(f"Uptime Kuma fetch error: {e}")
-        if not monitors:
-            return None
-
-    result = {}
-    for m in monitors.values():
-        result[m["name"]] = {"up": m["up"], "uptime_24h": m["uptime_24h"]}
-
-    _uptime_kuma_cache["data"] = result
-    _uptime_kuma_cache["expires_at"] = now + 30
-    return result
+        return None
 
 
 def match_service_status(monitors, services):
