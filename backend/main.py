@@ -167,7 +167,7 @@ async def fetch_uptime_kuma_data():
             uptime_raw = uptime_list.get(mid)
 
             # Current status from latest heartbeat
-            up = heartbeats[0].get("status") == 1 if heartbeats else False
+            up = heartbeats[-1].get("status") == 1 if heartbeats else False
 
             # 24h uptime from uptimeList (already calculated by Uptime Kuma)
             if uptime_raw is not None:
