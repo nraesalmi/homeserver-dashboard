@@ -14,10 +14,10 @@
     "locked": false
   },
   {
-    "name": "Healthchecks",
-    "url": "https://health.nfrastructure.xyz",
-    "icon": "❤️",
-    "description": "Cron Job Monitoring",
+    "name": "Beszel",
+    "url": "https://beszel.nfrastructure.xyz",
+    "icon": "📊",
+    "description": "Server Monitoring",
     "locked": false
   },
   {
