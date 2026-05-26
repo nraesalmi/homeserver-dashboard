@@ -18,7 +18,7 @@
     "url": "https://beszel.nfrastructure.xyz",
     "icon": "📊",
     "description": "Server Monitoring",
-    "locked": false
+    "locked": true
   },
   {
     "name": "Firefly III",
