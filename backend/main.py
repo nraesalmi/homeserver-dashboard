@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import json
 import os
 import time
+from datetime import datetime, timezone
 import httpx
 import psutil
 from dotenv import load_dotenv
@@ -93,6 +94,19 @@ async def fetch_beszel_stats():
                     "load": ila[0] if ila else 0,
                 })
 
+            n = len(items)
+            if n >= 2:
+                try:
+                    t0 = datetime.fromisoformat(items[0]["created"].replace("Z", "+00:00"))
+                    t1 = datetime.fromisoformat(items[-1]["created"].replace("Z", "+00:00"))
+                    span_min = (t0 - t1).total_seconds() / 60
+                    expected = max(n, round(span_min))
+                    uptime_pct = round(n / expected * 100, 1) if expected > 0 else 100.0
+                except Exception:
+                    uptime_pct = 100.0
+            else:
+                uptime_pct = 100.0 if n == 1 else 0.0
+
             return {
                 "cpu": s.get("cpu", 0),
                 "memory": s.get("mp", 0),
@@ -104,6 +118,7 @@ async def fetch_beszel_stats():
                 "load": la[0] if len(la) > 0 else 0,
                 "load5": la[1] if len(la) > 1 else 0,
                 "load15": la[2] if len(la) > 2 else 0,
+                "uptime_pct": uptime_pct,
                 "history": history,
                 "last_updated": latest.get("created"),
             }

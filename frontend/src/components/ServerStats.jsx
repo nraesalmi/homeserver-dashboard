@@ -1,5 +1,5 @@
 import { useState, useEffect, useId } from "react"
-import { Activity, MemoryStick, HardDrive, ArrowUp, ArrowDown, Clock } from "lucide-react"
+import { Activity, MemoryStick, HardDrive, ArrowUp, ArrowDown, Clock, Gauge } from "lucide-react"
 
 function formatBytes(bytes) {
   if (bytes === 0) return "0 B"
@@ -149,6 +149,13 @@ export default function ServerStats() {
                 {formatBytesPerSec(data.network_recv)}
               </span>
             </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 shrink-0 bg-white/[0.04] rounded-lg px-3 py-2 min-w-[110px]">
+          <Gauge size={16} className="text-purple-400 shrink-0" />
+          <div className="min-w-0">
+            <div className="text-xs text-white/50">Uptime</div>
+            <div className="text-sm font-semibold text-white tabular-nums">{data.uptime_pct?.toFixed(1)}%</div>
           </div>
         </div>
       </div>
