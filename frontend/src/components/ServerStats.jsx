@@ -135,6 +135,14 @@ export default function ServerStats() {
   const cpuHistory = data.history?.map((h) => h.cpu) ?? []
   const loadHistory = data.history?.map((h) => h.load) ?? []
 
+  const splitNet = (v) => {
+    const bps = Math.abs(v || 0)
+    if (bps >= 1024 ** 3) return {v: (bps / 1024 ** 3).toFixed(2), u: "GB/s"}
+    if (bps >= 1024 ** 2) return {v: (bps / 1024 ** 2).toFixed(1), u: "MB/s"}
+    if (bps >= 1024) return {v: (bps / 1024).toFixed(0), u: "KB/s"}
+    return {v: bps.toFixed(0), u: "B/s"}
+  }
+
   return (
     <div className="rounded-xl bg-white/5 border border-white/10 p-4 space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -142,42 +150,48 @@ export default function ServerStats() {
         <Sparkline data={loadHistory} color="#a78bfa" label="Load Average" width={280} height={90} />
       </div>
 
-      <div className="flex flex-nowrap gap-2 md:gap-3 overflow-x-auto pb-1">
-        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-2 shrink-0 bg-white/[0.04] rounded-lg px-2 md:px-3 py-2 min-w-[70px] md:min-w-[130px]">
-          <MemoryStick size={14} className="text-sky-400 shrink-0 md:mr-0" />
+      <div className="flex flex-nowrap gap-1 overflow-x-auto pb-1">
+        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-1.5 shrink-0 bg-white/[0.04] rounded-lg px-1.5 md:px-2.5 py-1.5">
+          <MemoryStick size={13} className="text-sky-400 shrink-0" />
           <div className="text-center md:text-left">
-            <div className="text-[10px] md:text-xs text-white/50 leading-tight">Memory</div>
-            <div className="text-xs md:text-sm font-semibold text-white tabular-nums">{data.memory?.toFixed(1)}%</div>
+            <div className="text-[10px] text-white/50 leading-tight">Memory</div>
+            <div className="text-[11px] md:text-sm font-semibold text-white tabular-nums">{data.memory?.toFixed(1)}%</div>
           </div>
         </div>
-        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-2 shrink-0 bg-white/[0.04] rounded-lg px-2 md:px-3 py-2 min-w-[70px] md:min-w-[130px]">
-          <HardDrive size={14} className="text-amber-400 shrink-0" />
+        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-1.5 shrink-0 bg-white/[0.04] rounded-lg px-1.5 md:px-2.5 py-1.5">
+          <HardDrive size={13} className="text-amber-400 shrink-0" />
           <div className="text-center md:text-left">
-            <div className="text-[10px] md:text-xs text-white/50 leading-tight">Disk</div>
-            <div className="text-xs md:text-sm font-semibold text-white tabular-nums">{data.disk?.toFixed(1)}%</div>
+            <div className="text-[10px] text-white/50 leading-tight">Disk</div>
+            <div className="text-[11px] md:text-sm font-semibold text-white tabular-nums">{data.disk?.toFixed(1)}%</div>
           </div>
         </div>
-        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-2 shrink-0 bg-white/[0.04] rounded-lg px-2 md:px-3 py-2 min-w-[70px] md:min-w-[170px]">
-          <Activity size={14} className="text-emerald-400 shrink-0" />
+        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-1.5 shrink-0 bg-white/[0.04] rounded-lg px-1.5 md:px-2.5 py-1.5">
+          <Activity size={13} className="text-emerald-400 shrink-0" />
           <div className="text-center md:text-left">
-            <div className="text-[10px] md:text-xs text-white/50 leading-tight">Network</div>
-            <div className="text-xs md:text-sm font-semibold text-white tabular-nums flex gap-1.5 md:gap-2 justify-center md:justify-start">
+            <div className="text-[10px] text-white/50 leading-tight">Network</div>
+            <div className="text-[11px] md:text-sm font-semibold text-white tabular-nums flex gap-1 justify-center md:justify-start">
+              {(() => { const f = splitNet(data.network_sent); return (
               <span className="flex items-center gap-0.5">
-                <ArrowUp size={10} className="text-emerald-400" />
-                {formatBytesPerSec(data.network_sent)}
+                <ArrowUp size={9} className="text-emerald-400" />
+                {f.v}
+                <span className="text-[9px] md:text-[11px] text-white/40 font-normal">{f.u}</span>
               </span>
+              )})()}
+              {(() => { const f = splitNet(data.network_recv); return (
               <span className="flex items-center gap-0.5">
-                <ArrowDown size={10} className="text-sky-400" />
-                {formatBytesPerSec(data.network_recv)}
+                <ArrowDown size={9} className="text-sky-400" />
+                {f.v}
+                <span className="text-[9px] md:text-[11px] text-white/40 font-normal">{f.u}</span>
               </span>
+              )})()}
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-2 shrink-0 bg-white/[0.04] rounded-lg px-2 md:px-3 py-2 min-w-[60px] md:min-w-[110px]">
-          <Gauge size={14} className="text-purple-400 shrink-0" />
+        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-1.5 shrink-0 bg-white/[0.04] rounded-lg px-1.5 md:px-2.5 py-1.5">
+          <Gauge size={13} className="text-purple-400 shrink-0" />
           <div className="text-center md:text-left">
-            <div className="text-[10px] md:text-xs text-white/50 leading-tight">Uptime</div>
-            <div className="text-xs md:text-sm font-semibold text-white tabular-nums">{uptimeAvg !== null ? uptimeAvg.toFixed(1) + "%" : "—"}</div>
+            <div className="text-[10px] text-white/50 leading-tight">Uptime</div>
+            <div className="text-[11px] md:text-sm font-semibold text-white tabular-nums">{uptimeAvg !== null ? uptimeAvg.toFixed(1) + "%" : "—"}</div>
           </div>
         </div>
       </div>
