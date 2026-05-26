@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react"
 import { FileText, Github, Linkedin, Mail, MoreHorizontal } from "lucide-react"
-import { ResourceGauge } from "./components/ResourceGauge"
 import { ServiceCard } from "./components/ServiceCard"
 import { SocialButton } from "./components/SocialButton"
+import ServerStats from "./components/ServerStats"
 
 const API = "/api"
 
@@ -20,27 +20,14 @@ const greetings = [
 ]
 
 export default function App() {
-  const [stats, setStats] = useState(null)
   const [services, setServices] = useState([])
   const [showMenu, setShowMenu] = useState(false)
   const greeting = useRef(greetings[Math.floor(Math.random() * greetings.length)])
 
   useEffect(() => {
-    const fetchStats = () =>
-      fetch(`${API}/stats`)
-        .then(r => r.json())
-        .then(setStats)
-
-    const fetchServices = () =>
-      fetch(`${API}/services`)
-        .then(r => r.json())
-        .then(setServices)
-
-    fetchStats()
-    fetchServices()
-
-    const interval = setInterval(fetchStats, 5000)
-    return () => clearInterval(interval)
+    fetch(`${API}/services`)
+      .then(r => r.json())
+      .then(setServices)
   }, [])
 
   const unlockedServices = services.filter(s => !s.locked)
@@ -113,20 +100,10 @@ export default function App() {
 
       {/* Scrollable Content */}
       <div className="relative z-10 flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-6">
-        {/* Greeting and Resource Gauges */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-white">{greeting.current}</h1>
-          <div className="flex items-center justify-center md:justify-end gap-2 md:gap-4 w-full md:w-auto">
-            {stats ? (
-              <>
-                <ResourceGauge label="CPU" value={stats.cpu} max={100} unit="%" />
-                <ResourceGauge label="RAM" value={stats.ram_used} max={stats.ram_total} unit="GB" />
-                <ResourceGauge label="Disk" value={stats.disk_used} max={stats.disk_total} unit="GB" />
-              </>
-            ) : (
-              <p className="text-neutral-400">Loading stats...</p>
-            )}
-          </div>
+        {/* Greeting */}
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">{greeting.current}</h1>
+          <ServerStats />
         </div>
 
         {/* Services */}
