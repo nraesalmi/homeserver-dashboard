@@ -21,6 +21,7 @@ const greetings = [
 
 export default function App() {
   const [services, setServices] = useState([])
+  const [serviceStatuses, setServiceStatuses] = useState({})
   const [showMenu, setShowMenu] = useState(false)
   const greeting = useRef(greetings[Math.floor(Math.random() * greetings.length)])
 
@@ -28,6 +29,19 @@ export default function App() {
     fetch(`${API}/services`)
       .then(r => r.json())
       .then(setServices)
+
+    const fetchStatus = () =>
+      fetch(`${API}/service-status`)
+        .then(r => r.json())
+        .then((list) => {
+          const map = {}
+          list.forEach((s) => { map[s.name] = s.status })
+          setServiceStatuses(map)
+        })
+
+    fetchStatus()
+    const interval = setInterval(fetchStatus, 60000)
+    return () => clearInterval(interval)
   }, [])
 
   const unlockedServices = services.filter(s => !s.locked)
@@ -120,11 +134,15 @@ export default function App() {
                   <span className="w-2 h-2 rounded-full bg-red-500" />
                   Offline
                 </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-neutral-500" />
+                  Unknown
+                </span>
               </div>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {unlockedServices.map(s => (
-                <ServiceCard key={s.name} icon={s.icon} name={s.name} url={s.url} status="online" description={s.description} />
+                <ServiceCard key={s.name} icon={s.icon} name={s.name} url={s.url} status={serviceStatuses[s.name] || "unknown"} description={s.description} />
               ))}
             </div>
           </div>
@@ -145,6 +163,10 @@ export default function App() {
                     <span className="w-2 h-2 rounded-full bg-red-500" />
                     Offline
                   </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-neutral-500" />
+                    Unknown
+                  </span>
                 </div>
               </div>
             )}
@@ -153,7 +175,7 @@ export default function App() {
             )}
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {lockedServices.map(s => (
-                <ServiceCard key={s.name} icon={s.icon} name={s.name} url={s.url} status="online" description={s.description} />
+                <ServiceCard key={s.name} icon={s.icon} name={s.name} url={s.url} status={serviceStatuses[s.name] || "unknown"} description={s.description} />
               ))}
             </div>
           </div>

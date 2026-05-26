@@ -76,6 +76,7 @@ function Sparkline({ data, width = 240, height = 80, color = "#22c55e", label })
 export default function ServerStats() {
   const [data, setData] = useState(null)
   const [error, setError] = useState(false)
+  const [uptimeData, setUptimeData] = useState(null)
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -89,10 +90,31 @@ export default function ServerStats() {
         setError(true)
       }
     }
+    const fetchUptime = async () => {
+      try {
+        const res = await fetch("/api/uptime")
+        if (!res.ok) throw new Error("Failed to fetch")
+        setUptimeData(await res.json())
+      } catch {
+        /* ignore */
+      }
+    }
     fetchStats()
-    const interval = setInterval(fetchStats, 30000)
-    return () => clearInterval(interval)
+    fetchUptime()
+    const statInterval = setInterval(fetchStats, 30000)
+    const uptimeInterval = setInterval(fetchUptime, 60000)
+    return () => {
+      clearInterval(statInterval)
+      clearInterval(uptimeInterval)
+    }
   }, [])
+
+  const uptimeAvg = uptimeData
+    ? (() => {
+        const vals = Object.values(uptimeData).map((m) => m.uptime_24h)
+        return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null
+      })()
+    : null
 
   if (error && !data) {
     return (
@@ -154,8 +176,8 @@ export default function ServerStats() {
         <div className="flex items-center gap-2 shrink-0 bg-white/[0.04] rounded-lg px-3 py-2 min-w-[110px]">
           <Gauge size={16} className="text-purple-400 shrink-0" />
           <div className="min-w-0">
-            <div className="text-xs text-white/50">Uptime</div>
-            <div className="text-sm font-semibold text-white tabular-nums">{data.uptime_pct?.toFixed(1)}%</div>
+            <div className="text-xs text-white/50">Uptime (24h)</div>
+            <div className="text-sm font-semibold text-white tabular-nums">{uptimeAvg !== null ? uptimeAvg.toFixed(1) + "%" : "—"}</div>
           </div>
         </div>
       </div>

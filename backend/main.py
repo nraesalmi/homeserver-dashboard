@@ -15,8 +15,10 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 BESZEL_URL = os.environ.get("BESZEL_URL")
 BESZEL_EMAIL = os.environ.get("BESZEL_EMAIL")
 BESZEL_PASSWORD = os.environ.get("BESZEL_PASSWORD")
+UPTIME_KUMA_URL = os.environ.get("UPTIME_KUMA_URL", "http://172.17.0.1:3002")
 
 _token_cache = {"token": None, "expires_at": 0}
+_uptime_kuma_cache = {"data": None, "expires_at": 0}
 
 app = FastAPI()
 
@@ -125,6 +127,96 @@ async def fetch_beszel_stats():
     except Exception as e:
         print(f"Stats fetch error: {e}")
         return None
+
+async def fetch_uptime_kuma_data():
+    now = time.time()
+    if _uptime_kuma_cache["data"] and now < _uptime_kuma_cache["expires_at"]:
+        return _uptime_kuma_cache["data"]
+
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.get(f"{UPTIME_KUMA_URL}/api/status-page/heartbeat/local-services")
+            if resp.status_code != 200:
+                print(f"Uptime Kuma heartbeat fetch failed: {resp.status_code}")
+                return None
+            data = resp.json()
+    except Exception as e:
+        print(f"Uptime Kuma fetch error: {e}")
+        return None
+
+    cutoff = now - 86400
+    monitors = {}
+
+    for mid, m in data.items():
+        name = m.get("name", "").strip()
+        if not name:
+            continue
+
+        heartbeats = m.get("heartbeats", [])
+        total_24h = 0
+        up_24h = 0
+
+        for hb in heartbeats:
+            try:
+                t = datetime.fromisoformat(hb.get("time", "").replace("Z", "+00:00")).timestamp()
+            except Exception:
+                continue
+            if t < cutoff:
+                continue
+            total_24h += 1
+            if hb.get("status") == 1:
+                up_24h += 1
+
+        uptime_24h = round(up_24h / total_24h * 100, 1) if total_24h > 0 else 100.0
+
+        latest_status = heartbeats[0].get("status") if heartbeats else None
+        up = latest_status == 1
+
+        monitors[name] = {"up": up, "uptime_24h": uptime_24h}
+
+    _uptime_kuma_cache["data"] = monitors
+    _uptime_kuma_cache["expires_at"] = now + 30
+    return monitors
+
+
+def match_service_status(monitors, services):
+    result = []
+    for svc in services:
+        svc_name = svc.get("name", "").strip().lower()
+        matched = None
+        for mon_name, mon_data in monitors.items():
+            if mon_name.lower() == svc_name:
+                matched = mon_data
+                break
+        if matched:
+            status = "up" if matched["up"] else "down"
+        else:
+            status = "unknown"
+        result.append({**svc, "status": status})
+    return result
+
+
+@app.get("/api/uptime")
+async def get_uptime():
+    data = await fetch_uptime_kuma_data()
+    if data is None:
+        return {}
+    return data
+
+
+@app.get("/api/service-status")
+async def get_service_status():
+    services = []
+    if os.path.exists(SERVICES_FILE):
+        with open(SERVICES_FILE, "r") as f:
+            services = json.load(f)
+
+    monitors = await fetch_uptime_kuma_data()
+    if monitors is None:
+        monitors = {}
+
+    return match_service_status(monitors, services)
+
 
 @app.get("/api/stats")
 def get_stats():
