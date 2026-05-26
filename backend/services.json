@@ -26,5 +26,19 @@
     "icon": "💰",
     "description": "Personal Finance",
     "locked": true
+  },
+  {
+    "name": "Stirling PDF",
+    "url": "https://stirlingpdf.nfrastructure.xyz",
+    "icon": "📄",
+    "description": "PDF Tools",
+    "locked": false
+  },
+  {
+    "name": "Excalidraw",
+    "url": "https://excalidraw.nfrastructure.xyz",
+    "icon": "✏️",
+    "description": "Whiteboard",
+    "locked": false
   }
 ]
