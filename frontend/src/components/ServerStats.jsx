@@ -142,42 +142,42 @@ export default function ServerStats() {
         <Sparkline data={loadHistory} color="#a78bfa" label="Load Average" width={280} height={90} />
       </div>
 
-      <div className="flex flex-nowrap gap-3 overflow-x-auto pb-1">
-        <div className="flex items-center gap-2 shrink-0 bg-white/[0.04] rounded-lg px-3 py-2 min-w-[130px]">
-          <MemoryStick size={16} className="text-sky-400 shrink-0" />
-          <div className="min-w-0">
-            <div className="text-xs text-white/50">Memory</div>
-            <div className="text-sm font-semibold text-white tabular-nums">{data.memory?.toFixed(1)}%</div>
+      <div className="flex flex-nowrap gap-2 md:gap-3 overflow-x-auto pb-1">
+        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-2 shrink-0 bg-white/[0.04] rounded-lg px-2 md:px-3 py-2 min-w-[70px] md:min-w-[130px]">
+          <MemoryStick size={14} className="text-sky-400 shrink-0 md:mr-0" />
+          <div className="text-center md:text-left">
+            <div className="text-[10px] md:text-xs text-white/50 leading-tight">Memory</div>
+            <div className="text-xs md:text-sm font-semibold text-white tabular-nums">{data.memory?.toFixed(1)}%</div>
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0 bg-white/[0.04] rounded-lg px-3 py-2 min-w-[130px]">
-          <HardDrive size={16} className="text-amber-400 shrink-0" />
-          <div className="min-w-0">
-            <div className="text-xs text-white/50">Disk</div>
-            <div className="text-sm font-semibold text-white tabular-nums">{data.disk?.toFixed(1)}%</div>
+        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-2 shrink-0 bg-white/[0.04] rounded-lg px-2 md:px-3 py-2 min-w-[70px] md:min-w-[130px]">
+          <HardDrive size={14} className="text-amber-400 shrink-0" />
+          <div className="text-center md:text-left">
+            <div className="text-[10px] md:text-xs text-white/50 leading-tight">Disk</div>
+            <div className="text-xs md:text-sm font-semibold text-white tabular-nums">{data.disk?.toFixed(1)}%</div>
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0 bg-white/[0.04] rounded-lg px-3 py-2 min-w-[170px]">
-          <Activity size={16} className="text-emerald-400 shrink-0" />
-          <div className="min-w-0">
-            <div className="text-xs text-white/50">Network</div>
-            <div className="text-sm font-semibold text-white tabular-nums flex gap-2">
+        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-2 shrink-0 bg-white/[0.04] rounded-lg px-2 md:px-3 py-2 min-w-[70px] md:min-w-[170px]">
+          <Activity size={14} className="text-emerald-400 shrink-0" />
+          <div className="text-center md:text-left">
+            <div className="text-[10px] md:text-xs text-white/50 leading-tight">Network</div>
+            <div className="text-xs md:text-sm font-semibold text-white tabular-nums flex gap-1.5 md:gap-2 justify-center md:justify-start">
               <span className="flex items-center gap-0.5">
-                <ArrowUp size={12} className="text-emerald-400" />
+                <ArrowUp size={10} className="text-emerald-400" />
                 {formatBytesPerSec(data.network_sent)}
               </span>
               <span className="flex items-center gap-0.5">
-                <ArrowDown size={12} className="text-sky-400" />
+                <ArrowDown size={10} className="text-sky-400" />
                 {formatBytesPerSec(data.network_recv)}
               </span>
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2 shrink-0 bg-white/[0.04] rounded-lg px-3 py-2 min-w-[110px]">
-          <Gauge size={16} className="text-purple-400 shrink-0" />
-          <div className="min-w-0">
-            <div className="text-xs text-white/50">Uptime (24h)</div>
-            <div className="text-sm font-semibold text-white tabular-nums">{uptimeAvg !== null ? uptimeAvg.toFixed(1) + "%" : "—"}</div>
+        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-2 shrink-0 bg-white/[0.04] rounded-lg px-2 md:px-3 py-2 min-w-[60px] md:min-w-[110px]">
+          <Gauge size={14} className="text-purple-400 shrink-0" />
+          <div className="text-center md:text-left">
+            <div className="text-[10px] md:text-xs text-white/50 leading-tight">Uptime</div>
+            <div className="text-xs md:text-sm font-semibold text-white tabular-nums">{uptimeAvg !== null ? uptimeAvg.toFixed(1) + "%" : "—"}</div>
           </div>
         </div>
       </div>
