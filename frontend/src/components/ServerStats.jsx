@@ -16,34 +16,26 @@ function formatBytesPerSec(bytes) {
   return (bps / 1024 ** 3).toFixed(2) + " GB/s"
 }
 
-function Sparkline({ data, width = 240, height = 80, color = "#22c55e", label }) {
-  const id = useId()
-  if (!data || data.length < 2) return null
-
-  const values = data.map((d) => (typeof d === "number" ? d : d))
-  const min = Math.min(...values)
-  const max = Math.max(...values)
-  const range = max - min || 1
-  const pad = 2
-
-  const points = values
+function polyPoints(vals, w, h, min, range, pad) {
+  return vals
     .map((v, i) => {
-      const x = (i / (values.length - 1)) * (width - pad * 2) + pad
-      const y = height - pad - ((v - min) / range) * (height - pad * 2)
+      const x = (i / (vals.length - 1)) * (w - pad * 2) + pad
+      const y = h - pad - ((v - min) / range) * (h - pad * 2)
       return `${x.toFixed(1)},${y.toFixed(1)}`
     })
     .join(" ")
+}
 
-  const areaPoints =
-    `${pad},${height} ` +
-    values
-      .map((v, i) => {
-        const x = (i / (values.length - 1)) * (width - pad * 2) + pad
-        const y = height - pad - ((v - min) / range) * (height - pad * 2)
-        return `${x.toFixed(1)},${y.toFixed(1)}`
-      })
-      .join(" ") +
-    ` ${width - pad},${height}`
+function Sparkline({ data, width = 240, height = 80, color = "#22c55e", label, series }) {
+  const id = useId()
+  const lines = series || [{ data, color }]
+  const allVals = lines.flatMap((l) => l.data.map((d) => (typeof d === "number" ? d : d)))
+  if (allVals.length < 2) return null
+
+  const min = Math.min(...allVals)
+  const max = Math.max(...allVals)
+  const range = max - min || 1
+  const pad = 2
 
   return (
     <div className="flex flex-col">
@@ -55,13 +47,19 @@ function Sparkline({ data, width = 240, height = 80, color = "#22c55e", label })
         preserveAspectRatio="xMidYMid meet"
       >
         <defs>
-          <linearGradient id={`spark-fill-${id}`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={color} stopOpacity="0.3" />
-            <stop offset="100%" stopColor={color} stopOpacity="0" />
-          </linearGradient>
+          {lines.length === 1 && (
+            <linearGradient id={`spark-fill-${id}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={color} stopOpacity="0.3" />
+              <stop offset="100%" stopColor={color} stopOpacity="0" />
+            </linearGradient>
+          )}
         </defs>
-        <polygon fill={`url(#spark-fill-${id})`} points={areaPoints} />
-        <polyline fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={points} />
+        {lines.length === 1 && (
+          <polygon fill={`url(#spark-fill-${id})`} points={`${pad},${height} ${polyPoints(lines[0].data, width, height, min, range, pad)} ${width - pad},${height}`} />
+        )}
+        {lines.map((l, i) => (
+          <polyline key={i} fill="none" stroke={l.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={polyPoints(l.data, width, height, min, range, pad)} />
+        ))}
         <text x={pad} y={pad + 10} fill="white" fillOpacity="0.6" fontSize="10" fontFamily="monospace">
           {max.toFixed(1)}
         </text>
@@ -150,6 +148,18 @@ export default function ServerStats() {
         <Sparkline data={loadHistory} color="#a78bfa" label="Load Average" width={280} height={90} />
       </div>
 
+      <div className="hidden md:grid grid-cols-1 gap-4">
+        <Sparkline
+          series={[
+            { data: data.history?.map((h) => h.network_sent) ?? [], color: "#22c55e" },
+            { data: data.history?.map((h) => h.network_recv) ?? [], color: "#38bdf8" },
+          ]}
+          label="Network (↑ sent / ↓ recv)"
+          width={580}
+          height={80}
+        />
+      </div>
+
       <div className="flex flex-wrap justify-center gap-1 md:flex-nowrap md:justify-start md:gap-4 md:overflow-x-auto pb-1">
         <div className="flex flex-col items-center md:flex-row md:items-center md:gap-1.5 shrink-0 bg-white/[0.04] rounded-lg px-1.5 md:px-2.5 py-1.5">
           <MemoryStick size={13} className="text-sky-400 shrink-0" />
@@ -165,7 +175,7 @@ export default function ServerStats() {
             <div className="text-[11px] md:text-sm font-semibold text-white tabular-nums">{data.disk?.toFixed(1)}%</div>
           </div>
         </div>
-        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-1.5 shrink-0 bg-white/[0.04] rounded-lg px-1.5 md:px-2.5 py-1.5">
+        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-1.5 shrink-0 bg-white/[0.04] rounded-lg px-1.5 md:px-2.5 py-1.5 md:hidden">
           <Activity size={13} className="text-emerald-400 shrink-0" />
           <div className="text-center md:text-left">
             <div className="text-[10px] text-white/50 leading-tight">Network</div>
