@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(__file__)
 SERVICES_FILE = os.path.join(BASE_DIR, "services.json")
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-BESZEL_URL = os.environ.get("BESZEL_URL", "http://192.168.0.105:809")
+BESZEL_URL = os.environ.get("BESZEL_URL")
 BESZEL_EMAIL = os.environ.get("BESZEL_EMAIL")
 BESZEL_PASSWORD = os.environ.get("BESZEL_PASSWORD")
 
