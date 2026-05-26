@@ -150,7 +150,7 @@ export default function ServerStats() {
         <Sparkline data={loadHistory} color="#a78bfa" label="Load Average" width={280} height={90} />
       </div>
 
-      <div className="flex flex-nowrap gap-1 md:gap-4 overflow-x-auto pb-1">
+      <div className="flex flex-wrap justify-center gap-1 md:flex-nowrap md:justify-start md:gap-4 md:overflow-x-auto pb-1">
         <div className="flex flex-col items-center md:flex-row md:items-center md:gap-1.5 shrink-0 bg-white/[0.04] rounded-lg px-1.5 md:px-2.5 py-1.5">
           <MemoryStick size={13} className="text-sky-400 shrink-0" />
           <div className="text-center md:text-left">
