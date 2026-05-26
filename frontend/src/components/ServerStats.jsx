@@ -143,21 +143,20 @@ export default function ServerStats() {
 
   return (
     <div className="rounded-xl bg-white/5 border border-white/10 p-4 space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Sparkline data={cpuHistory} color="#22c55e" label="CPU Usage %" width={280} height={90} />
         <Sparkline data={loadHistory} color="#a78bfa" label="Load Average" width={280} height={90} />
-      </div>
-
-      <div className="hidden md:grid grid-cols-2 gap-4">
-        <Sparkline
-          series={[
-            { data: data.history?.map((h) => h.network_sent) ?? [], color: "#22c55e" },
-            { data: data.history?.map((h) => h.network_recv) ?? [], color: "#38bdf8" },
-          ]}
-          label="Network (↑ sent / ↓ recv)"
-          width={280}
-          height={90}
-        />
+        <div className="hidden md:block">
+          <Sparkline
+            series={[
+              { data: data.history?.map((h) => h.network_sent) ?? [], color: "#22c55e" },
+              { data: data.history?.map((h) => h.network_recv) ?? [], color: "#38bdf8" },
+            ]}
+            label="Network (↑ sent / ↓ recv)"
+            width={280}
+            height={90}
+          />
+        </div>
       </div>
 
       <div className="flex flex-wrap justify-center gap-1 md:flex-nowrap md:justify-start md:gap-4 md:overflow-x-auto pb-1">
