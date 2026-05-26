@@ -90,10 +90,13 @@ async def fetch_beszel_stats():
             for item in reversed(items):
                 item_stats = item.get("stats", {})
                 ila = item_stats.get("la", [0])
+                ib = item_stats.get("b", [0, 0])
                 history.append({
                     "time": item.get("created", ""),
                     "cpu": item_stats.get("cpu", 0),
                     "load": ila[0] if ila else 0,
+                    "network_sent": ib[0] if len(ib) > 0 else 0,
+                    "network_recv": ib[1] if len(ib) > 1 else 0,
                 })
 
             n = len(items)
