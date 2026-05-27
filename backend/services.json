@@ -1,31 +1,10 @@
 [
   {
     "name": "Docmost",
-    "url": "https://docs.nfrastructure.xyz",
-    "icon": "📚",
-    "description": "Personal Docs",
-    "locked": true
-  },
-  {
-    "name": "Docmost",
     "url": "https://docs.nfrastructure.xyz/share/0ak27sw280/p/public-docs-Uy0bBzDPcK",
     "icon": "📚",
     "description": "Public Docs",
     "locked": false
-  },
-  {
-    "name": "Beszel",
-    "url": "https://beszel.nfrastructure.xyz",
-    "icon": "📊",
-    "description": "Server Monitoring",
-    "locked": true
-  },
-  {
-    "name": "Firefly III",
-    "url": "https://firefly.nfrastructure.xyz",
-    "icon": "💰",
-    "description": "Personal Finance",
-    "locked": true
   },
   {
     "name": "Stirling PDF",
@@ -40,6 +19,34 @@
     "icon": "✏️",
     "description": "Whiteboard",
     "locked": false
+  },
+  {
+    "name": "Docmost",
+    "url": "https://docs.nfrastructure.xyz",
+    "icon": "📚",
+    "description": "Personal Docs",
+    "locked": true
+  },
+  {
+    "name": "Jellyfin",
+    "url": "https://jellyfin.nfrastructure.xyz",
+    "icon": "🎬",
+    "description": "Media Server",
+    "locked": true
+  },
+  {
+    "name": "Firefly III",
+    "url": "https://firefly.nfrastructure.xyz",
+    "icon": "💰",
+    "description": "Personal Finance",
+    "locked": true
+  },
+  {
+    "name": "Beszel",
+    "url": "https://beszel.nfrastructure.xyz",
+    "icon": "📊",
+    "description": "Server Monitoring",
+    "locked": true
   },
   {
     "name": "Uptime Kuma",
