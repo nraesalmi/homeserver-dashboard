@@ -1,4 +1,4 @@
-import { useState, useEffect, useId } from "react"
+import React, { useState, useEffect, useId } from "react"
 import { Activity, MemoryStick, HardDrive, ArrowUp, ArrowDown, Clock, Gauge } from "lucide-react"
 
 function formatBytes(bytes) {
@@ -58,7 +58,10 @@ function Sparkline({ data, width = 240, height = 80, color = "#22c55e", label, s
           <polygon fill={`url(#spark-fill-${id})`} points={`${pad},${height} ${polyPoints(lines[0].data, width, height, min, range, pad)} ${width - pad},${height}`} />
         )}
         {lines.map((l, i) => (
-          <polyline key={i} fill="none" stroke={l.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={polyPoints(l.data, width, height, min, range, pad)} />
+          <React.Fragment key={i}>
+            <polygon fill={l.color} fillOpacity="0.15" points={`${pad},${height} ${polyPoints(l.data, width, height, min, range, pad)} ${width - pad},${height}`} />
+            <polyline fill="none" stroke={l.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={polyPoints(l.data, width, height, min, range, pad)} />
+          </React.Fragment>
         ))}
         <text x={pad} y={pad + 10} fill="white" fillOpacity="0.6" fontSize="10" fontFamily="monospace">
           {max.toFixed(1)}
@@ -152,7 +155,7 @@ export default function ServerStats() {
               { data: data.history?.map((h) => h.network_sent) ?? [], color: "#22c55e" },
               { data: data.history?.map((h) => h.network_recv) ?? [], color: "#38bdf8" },
             ]}
-            label="Network (↑ sent / ↓ recv)"
+            label={<span>Network <ArrowUp size={10} className="inline-block -mb-0.5 text-green-500" /> sent / <ArrowDown size={10} className="inline-block -mb-0.5 text-sky-400" /> recv</span>}
             width={280}
             height={90}
           />
@@ -181,7 +184,7 @@ export default function ServerStats() {
             <div className="text-[11px] md:text-sm font-semibold text-white tabular-nums flex gap-1 justify-center md:justify-start">
               {(() => { const f = splitNet(data.network_sent); return (
               <span className="flex items-center gap-0.5">
-                <ArrowUp size={9} className="text-emerald-400" />
+                <ArrowUp size={9} className="text-green-500" />
                 {f.v}
                 <span className="text-[9px] md:text-[11px] text-white/40 font-normal">{f.u}</span>
               </span>
