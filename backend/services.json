@@ -54,5 +54,12 @@
     "icon": "🔔",
     "description": "Service Monitoring",
     "locked": true
+  },
+  {
+    "name": "Vaultwarden",
+    "url": "https://vaultwarden.nfrastructure.xyz",
+    "icon": "🔑",
+    "description": "Password Manager",
+    "locked": true
   }
 ]
