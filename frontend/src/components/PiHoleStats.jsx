@@ -26,9 +26,9 @@ export default function PiHoleStats() {
 
   return (
     <div className="rounded-xl bg-white/5 border border-white/10 p-4 space-y-4">
-      <div className="text-sm font-semibold text-white">Pi-Hole Statistics</div>
+      <span className="text-xs text-white/50 mb-1 font-medium">Pi-Hole Statistics</span>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap justify-center md:justify-start gap-2">
         <div className="bg-white/[0.04] rounded-lg px-1.5 md:px-2.5 py-1.5">
           <div className="text-[10px] text-white/50 leading-tight">Total Queries</div>
           <div className="text-[11px] md:text-sm font-semibold text-white tabular-nums">{fmt(data.queries_total)}</div>
