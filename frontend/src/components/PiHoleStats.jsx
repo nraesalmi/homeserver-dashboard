@@ -1,14 +1,5 @@
 import { useState, useEffect } from "react"
 
-function PiHoleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="11" stroke="#EAB308" strokeWidth="2" />
-      <text x="12" y="16" textAnchor="middle" fontSize="14" fontWeight="bold" fill="#EAB308" fontFamily="sans-serif">P</text>
-    </svg>
-  )
-}
-
 function fmt(n) {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M"
   if (n >= 1_000) return (n / 1_000).toFixed(1) + "K"
@@ -35,10 +26,7 @@ export default function PiHoleStats() {
 
   return (
     <div className="rounded-xl bg-white/5 border border-white/10 p-3 md:p-4 space-y-2">
-      <div className="flex items-center gap-2">
-        <PiHoleIcon />
-        <span className="text-sm font-semibold text-white">Pi‑hole</span>
-      </div>
+      <div className="text-sm font-semibold text-white">Pi-Hole Statistics</div>
 
       <div className="flex flex-wrap gap-2">
         <div className="bg-white/[0.04] rounded-lg px-2.5 py-1.5 min-w-[90px]">

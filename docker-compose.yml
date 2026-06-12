@@ -3,17 +3,35 @@ services:
     build: ./frontend
     container_name: dashboard_frontend
     restart: unless-stopped
-    ports:
-      - "3000:80"
     depends_on:
       - backend
+    networks:
+      - proxy           # cloudflared reaches the UI here
+      - dashboard_net   # frontend can reach backend here
+    security_opt:
+      - no-new-privileges:true
 
   backend:
     build: ./backend
     container_name: dashboard_backend
     restart: unless-stopped
-    ports:
-      - "8001:8000"
+    env_file:
+      - .env
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
+    networks:
+      - dashboard_net   # frontend reaches backend here
+      - monitoring      # backend reaches beszel + uptime-kuma here
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  proxy:
+    external: true
+  monitoring:
+    external: true
+  dashboard_net:
+    driver: bridge
+    internal: true      # isolated — only frontend/backend talk here
+
