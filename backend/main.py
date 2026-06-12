@@ -21,6 +21,7 @@ PIHOLE_API_KEY = os.environ.get("PIHOLE_API_KEY")
 
 _token_cache = {"token": None, "expires_at": 0}
 _uptime_kuma_cache = {"data": None, "expires_at": 0}
+_pihole_cache = {"data": None, "expires_at": 0}
 
 app = FastAPI()
 
@@ -246,29 +247,43 @@ def get_services():
             return json.load(f)
     return []
 
+async def get_pi_hole_sid():
+    async with httpx.AsyncClient(timeout=10) as client:
+        resp = await client.post(
+            f"{PIHOLE_URL}/api/auth",
+            json={"password": PIHOLE_API_KEY}
+        )
+        if resp.status_code != 200:
+            raise HTTPException(status_code=502, detail="Pi-hole auth failed")
+        return resp.json()["session"]["sid"]
+
 @app.get("/api/pi-hole")
 async def get_pi_hole_stats():
-    if not PIHOLE_API_KEY:
-        raise HTTPException(status_code=503, detail="PIHOLE_API_KEY not configured")
+    now = time.time()
+    if _pihole_cache["data"] and now < _pihole_cache["expires_at"]:
+        return _pihole_cache["data"]
     try:
+        sid = await get_pi_hole_sid()
         async with httpx.AsyncClient(timeout=10) as client:
             resp = await client.get(
                 f"{PIHOLE_URL}/api/stats/summary",
-                params={"auth": PIHOLE_API_KEY},
+                headers={"sid": sid}
             )
             if resp.status_code != 200:
                 raise HTTPException(status_code=502, detail="Pi-hole API error")
             d = resp.json()
-            return {
-                "queries_total": d.get("dns_queries_today", 0),
-                "queries_blocked": d.get("ads_blocked_today", 0),
-                "blocked_pct": round(float(d.get("ads_percentage_today", 0)), 1),
-                "domains_blocked": d.get("domains_being_blocked", 0),
+            result = {
+                "queries_total": d.get("queries", {}).get("total", 0),
+                "queries_blocked": d.get("queries", {}).get("blocked", 0),
+                "blocked_pct": round(float(d.get("queries", {}).get("percent_blocked", 0)), 1),
+                "domains_blocked": d.get("gravity", {}).get("domains_being_blocked", 0),
             }
+            _pihole_cache["data"] = result
+            _pihole_cache["expires_at"] = now + 30
+            return result
     except Exception as e:
         print(f"Pi-hole fetch error: {e}")
         raise HTTPException(status_code=503, detail="Unable to fetch Pi-hole stats")
-
 
 @app.get("/api/server-stats")
 async def get_server_stats():
