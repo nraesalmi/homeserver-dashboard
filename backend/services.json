@@ -71,7 +71,7 @@
   },
   {
     "name": "Pi‑hole",
-    "url": "https://pi-hole.nfrastructure.xyz",
+    "url": "https://pi-hole.nfrastructure.xyz/admin/",
     "icon": "🛡️",
     "description": "DNS Filtering",
     "locked": true
