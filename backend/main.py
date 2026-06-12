@@ -15,7 +15,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 BESZEL_URL = os.environ.get("BESZEL_URL")
 BESZEL_EMAIL = os.environ.get("BESZEL_EMAIL")
 BESZEL_PASSWORD = os.environ.get("BESZEL_PASSWORD")
-UPTIME_KUMA_URL = os.environ.get("UPTIME_KUMA_URL", "http://172.17.0.1:3002")
+UPTIME_KUMA_URL = os.environ.get("UPTIME_KUMA_URL", "http://uptime-kuma:3001")
 PIHOLE_URL = os.environ.get("PIHOLE_URL", "http://pihole:80")
 PIHOLE_API_KEY = os.environ.get("PIHOLE_API_KEY")
 
