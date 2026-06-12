@@ -272,7 +272,7 @@ async def get_pi_hole_stats():
     if _pihole_cache["data"] and now < _pihole_cache["expires_at"]:
         return _pihole_cache["data"]
     try:
-        sid = await get_pi_hole_sid()
+        sid = await get_pihole_sid()
         async with httpx.AsyncClient(timeout=10) as client:
             resp = await client.get(
                 f"{PIHOLE_URL}/api/stats/summary",
