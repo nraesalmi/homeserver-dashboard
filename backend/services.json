@@ -68,5 +68,12 @@
     "icon": "🤖",
     "description": "AI Lab",
     "locked": false
+  },
+  {
+    "name": "Pi‑hole",
+    "url": "https://pi-hole.nfrastructure.xyz",
+    "icon": "🛡️",
+    "description": "DNS Filtering",
+    "locked": true
   }
 ]

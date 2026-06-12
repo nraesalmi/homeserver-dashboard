@@ -3,6 +3,7 @@ import { FileText, Github, Linkedin, Mail, MoreHorizontal } from "lucide-react"
 import { ServiceCard } from "./components/ServiceCard"
 import { SocialButton } from "./components/SocialButton"
 import ServerStats from "./components/ServerStats"
+import PiHoleStats from "./components/PiHoleStats"
 
 const API = "/api"
 
@@ -118,6 +119,7 @@ export default function App() {
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">{greeting.current}</h1>
           <ServerStats />
+          <PiHoleStats />
         </div>
 
         {/* Services */}

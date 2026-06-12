@@ -16,6 +16,8 @@ BESZEL_URL = os.environ.get("BESZEL_URL")
 BESZEL_EMAIL = os.environ.get("BESZEL_EMAIL")
 BESZEL_PASSWORD = os.environ.get("BESZEL_PASSWORD")
 UPTIME_KUMA_URL = os.environ.get("UPTIME_KUMA_URL", "http://172.17.0.1:3002")
+PIHOLE_URL = os.environ.get("PIHOLE_URL", "http://pihole:80")
+PIHOLE_API_KEY = os.environ.get("PIHOLE_API_KEY")
 
 _token_cache = {"token": None, "expires_at": 0}
 _uptime_kuma_cache = {"data": None, "expires_at": 0}
@@ -243,6 +245,30 @@ def get_services():
         with open(SERVICES_FILE, "r") as f:
             return json.load(f)
     return []
+
+@app.get("/api/pi-hole")
+async def get_pi_hole_stats():
+    if not PIHOLE_API_KEY:
+        raise HTTPException(status_code=503, detail="PIHOLE_API_KEY not configured")
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            resp = await client.get(
+                f"{PIHOLE_URL}/api/stats/summary",
+                params={"auth": PIHOLE_API_KEY},
+            )
+            if resp.status_code != 200:
+                raise HTTPException(status_code=502, detail="Pi-hole API error")
+            d = resp.json()
+            return {
+                "queries_total": d.get("dns_queries_today", 0),
+                "queries_blocked": d.get("ads_blocked_today", 0),
+                "blocked_pct": round(float(d.get("ads_percentage_today", 0)), 1),
+                "domains_blocked": d.get("domains_being_blocked", 0),
+            }
+    except Exception as e:
+        print(f"Pi-hole fetch error: {e}")
+        raise HTTPException(status_code=503, detail="Unable to fetch Pi-hole stats")
+
 
 @app.get("/api/server-stats")
 async def get_server_stats():
