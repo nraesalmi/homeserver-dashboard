@@ -118,8 +118,10 @@ export default function App() {
         {/* Greeting */}
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-white mb-4">{greeting.current}</h1>
-          <ServerStats />
-          <PiHoleStats />
+          <div className="space-y-2">
+            <ServerStats />
+            <PiHoleStats />
+          </div>
         </div>
 
         {/* Services */}
