@@ -75,5 +75,12 @@
     "icon": "🛡️",
     "description": "DNS Filtering",
     "locked": true
+  },
+  {
+    "name": "Grist",
+    "url": "https://grist.nfrastructure.xyz",
+    "icon": "📊",
+    "description": "Spreadsheet Database",
+    "locked": true
   }
 ]
