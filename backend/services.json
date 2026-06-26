@@ -21,6 +21,13 @@
     "locked": false
   },
   {
+    "name": "Grist",
+    "url": "https://grist.nfrastructure.xyz",
+    "icon": "📊",
+    "description": "Spreadsheet Database",
+    "locked": false
+  },
+  {
     "name": "Docmost",
     "url": "https://docs.nfrastructure.xyz",
     "icon": "📚",
@@ -74,13 +81,6 @@
     "url": "https://pi-hole.nfrastructure.xyz/admin/",
     "icon": "🛡️",
     "description": "DNS Filtering",
-    "locked": true
-  },
-  {
-    "name": "Grist",
-    "url": "https://grist.nfrastructure.xyz",
-    "icon": "📊",
-    "description": "Spreadsheet Database",
     "locked": true
   }
 ]
