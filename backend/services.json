@@ -1,5 +1,12 @@
 [
   {
+    "name": "About",
+    "url": "https://about.nfrastructure.xyz",
+    "icon": "👤",
+    "description": "About Me",
+    "locked": false
+  },
+  {
     "name": "Docmost",
     "url": "https://docs.nfrastructure.xyz/share/0ak27sw280/p/public-docs-Uy0bBzDPcK",
     "icon": "📚",
