@@ -2,6 +2,8 @@
 
 A self-hosted dashboard for your home server — monitors system stats, provides quick access to your services, and includes a streaming service launcher page.
 
+<img width="1280" height="640" alt="image" src="https://github.com/user-attachments/assets/03045edf-da11-4f5d-98e9-e4917ee15d0d" />
+
 ## Features
 
 - **System Stats** — real-time CPU, RAM, and disk usage gauges
